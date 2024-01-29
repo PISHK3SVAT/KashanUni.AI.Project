@@ -20,7 +20,7 @@ namespace KashanUni.AI.Project
             }
         }
 
-        public (Chromosome<T> chromosome, double fitness)[] Execute(int stopCount, double crossOverProb)
+        public (Chromosome<T> chromosome, double fitness)[] Execute(int stopCount, double crossOverProb, double mutaionProb, double mutationGenProb)
         {
             InitialPopulation();
             for (int i = 1; i <= stopCount; i++)
@@ -28,8 +28,8 @@ namespace KashanUni.AI.Project
                 EvaluateAll();
                 var parents=RandomParentSelection();
                 var childrens=UniformCrossOver(crossOverProb, parents.a, parents.b);
-                Mutation(childrens.a);
-                Mutation(childrens.b);
+                Mutation(mutaionProb, mutationGenProb, childrens.a);
+                Mutation(mutaionProb, mutationGenProb, childrens.b);
                 ChangePopulation(childrens.a,childrens.b);
             }
             return population;
@@ -81,9 +81,22 @@ namespace KashanUni.AI.Project
             }
             return (child1, child2);
         }
-        void Mutation(Chromosome<T> child)
+        void Mutation(double pm, double pg, Chromosome<T> child)
         {
-
+            var rnd = new Random();
+            var value = rnd.NextDouble();
+            if (value < pm)
+            {
+                for (int i = 0; i < child.Values.Length; i++)
+                {
+                    value = rnd.NextDouble();
+                    if (value < pg)
+                    {
+                        var index = rnd.Next(0, child.allel.Count);
+                        child[i] = child.allel[index];
+                    }
+                }
+            }
         }
         void RoulteteWheel()
         {
