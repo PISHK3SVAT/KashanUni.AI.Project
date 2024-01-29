@@ -56,6 +56,7 @@ List<int> allel = new();
 
 
 Console.WriteLine("Hello, World!");
+
 var ga = new GA<int>(4, choromosomeLenght, allel);
 ga.InitialPopulation();
 foreach (var item in ga.population)

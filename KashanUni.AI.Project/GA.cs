@@ -8,11 +8,11 @@ namespace KashanUni.AI.Project
 {
     public class GA<T>
     {
-        public (Chromosome<T> chromosome, int fitness)[] population;
-        public Func<Chromosome<T>,int> Evaluate;
-        public GA(int populationSize, int chromosomSize, List<T> allel, , Func<Chromosome<T>, int> evaluate)
+        public (Chromosome<T> chromosome, double fitness)[] population;
+        public Func<Chromosome<T>,double> Evaluate;
+        public GA(int populationSize, int chromosomSize, List<T> allel, Func<Chromosome<T>, double> evaluate)
         {
-            population = new (Chromosome<T> chromosome, int fitness)[populationSize];
+            population = new (Chromosome<T> chromosome, double fitness)[populationSize];
             for (int i = 0; i < populationSize; i++)
             {
                 population[i] = (new Chromosome<T>(chromosomSize, allel), 0);
@@ -20,7 +20,7 @@ namespace KashanUni.AI.Project
             Evaluate = evaluate;
         }
 
-        public (Chromosome<T> chromosome, int fitness)[] Execute(int stopCount, double crossOverProb, double mutaionProb, double mutationGenProb)
+        public (Chromosome<T> chromosome, double fitness)[] Execute(int stopCount, double crossOverProb, double mutaionProb, double mutationGenProb)
         {
             InitialPopulation();
             for (int i = 1; i <= stopCount; i++)
@@ -101,12 +101,7 @@ namespace KashanUni.AI.Project
         }
         void RoulteteWheel()
         {
-            var total=population.Select(x=>x.fitness).Sum();
-            var wheel = new Chromosome<T>[total];
-            for (int i = 0; i < population.Length; i++)
-            {
-                
-            }
+            
         }
         void ChangePopulation(Chromosome<T> child1, Chromosome<T> child2)
         {
