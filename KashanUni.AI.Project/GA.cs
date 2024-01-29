@@ -8,19 +8,19 @@ namespace KashanUni.AI.Project
 {
     public class GA<T>
     {
-        public (Chromosome<T> chromosome, double fitness)[] population;
-        public double[] fitness;
-        public GA(int populationSize, int chromosomSize, List<T> allel)
+        public (Chromosome<T> chromosome, int fitness)[] population;
+        public Func<Chromosome<T>,int> Evaluate;
+        public GA(int populationSize, int chromosomSize, List<T> allel, , Func<Chromosome<T>, int> evaluate)
         {
-            population = new (Chromosome<T> chromosome, double fitness)[populationSize];
-            fitness = new double[populationSize];
+            population = new (Chromosome<T> chromosome, int fitness)[populationSize];
             for (int i = 0; i < populationSize; i++)
             {
-                population[i]=(new Chromosome<T> (chromosomSize, allel),0);
+                population[i] = (new Chromosome<T>(chromosomSize, allel), 0);
             }
+            Evaluate = evaluate;
         }
 
-        public (Chromosome<T> chromosome, double fitness)[] Execute(int stopCount, double crossOverProb, double mutaionProb, double mutationGenProb)
+        public (Chromosome<T> chromosome, int fitness)[] Execute(int stopCount, double crossOverProb, double mutaionProb, double mutationGenProb)
         {
             InitialPopulation();
             for (int i = 1; i <= stopCount; i++)
@@ -47,13 +47,14 @@ namespace KashanUni.AI.Project
                 }
             }
         }
-        void Evaluate(Chromosome<T> chromosome)
-        {
-            
-        }
+        
         void EvaluateAll()
         {
-            
+            for (int i = 0; i < population.Length; i++)
+            {
+                var tmp = population[i];
+                tmp.fitness = Evaluate(tmp.chromosome);
+            }
         }
         (Chromosome<T> a, Chromosome<T> b) RandomParentSelection()
         {
@@ -100,11 +101,12 @@ namespace KashanUni.AI.Project
         }
         void RoulteteWheel()
         {
-            var probs = new double[population.Length];
-            var total = fitness.Sum();
-            for (int i = 0; i < probs.Length; i++)
-                probs[i] = fitness[i] / total;
-
+            var total=population.Select(x=>x.fitness).Sum();
+            var wheel = new Chromosome<T>[total];
+            for (int i = 0; i < population.Length; i++)
+            {
+                
+            }
         }
         void ChangePopulation(Chromosome<T> child1, Chromosome<T> child2)
         {
