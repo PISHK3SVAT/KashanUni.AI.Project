@@ -8,8 +8,8 @@ namespace KashanUni.AI.Project
 {
     public class GA<T>
     {
-        public (Chromosome<T> chromosome, double fitness)[] population;
-        public Func<Chromosome<T>,double> Evaluate;
+        private (Chromosome<T> chromosome, double fitness)[] population;
+        private Func<Chromosome<T>,double> Evaluate;
         public GA(int populationSize, int chromosomSize, List<T> allel, Func<Chromosome<T>, double> evaluate)
         {
             population = new (Chromosome<T> chromosome, double fitness)[populationSize];
@@ -34,7 +34,7 @@ namespace KashanUni.AI.Project
             }
             return population;
         }
-        public void InitialPopulation()
+        void InitialPopulation()
         {
             for (int i = 0;i < population.Length; i++)
             {

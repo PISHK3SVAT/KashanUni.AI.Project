@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.ComponentModel.DataAnnotations;
-
+﻿// alef
 using KashanUni.AI.Project;
 
 var matrix = new int[10, 10];
@@ -26,15 +24,7 @@ matrix[7, 3] = 1;
 //row 10
 matrix[9, 0] = 7;
 
-//for (int i = 0; i < matrix.GetLength(0); i++)
-//{
-//    for (int j = 0; j < matrix.GetLength(1); j++)
-//    {
-//        var val = matrix[i, j] == int.MaxValue ? "inf" : matrix[i, j].ToString("D3");
-//        Console.Write(val + " ");
-//    }
-//    Console.WriteLine();
-//}
+
 
 var verticesCount=matrix.GetLength(0);
 var unReachableVertices = new List<int>();
@@ -53,9 +43,12 @@ for (int i = 0; i < verticesCount;i++)
 
 var choromosomeLenght=verticesCount-unReachableVertices.Count;
 List<int> allel = new();
+for (int i = 0; i < verticesCount; i++)
+{
+    if (!unReachableVertices.Contains(i))
+        allel.Add(i);
+}
 
-
-Console.WriteLine("Hello, World!");
 double Evaluate(Chromosome<int> a)
 {
     var tmp = 0D;
@@ -77,8 +70,21 @@ double Evaluate(Chromosome<int> a)
     return tmp;
 }
 var ga = new GA<int>(4, choromosomeLenght, allel, Evaluate);
-ga.InitialPopulation();
-foreach (var item in ga.population)
-{
-    Console.WriteLine(item + "\n===============");
-}
+var result = ga.Execute(100,0.6D,0.6D,0.5D);
+var finalRes = result.OrderBy(x => x.fitness).First();
+
+
+
+
+//void PrintMatrix(int[,] matrix)
+//{
+//    for (int i = 0; i < matrix.GetLength(0); i++)
+//    {
+//        for (int j = 0; j < matrix.GetLength(1); j++)
+//        {
+//            var val = matrix[i, j] == int.MaxValue ? "inf" : matrix[i, j].ToString("D3");
+//            Console.Write(val + " ");
+//        }
+//        Console.WriteLine();
+//    }
+//}
