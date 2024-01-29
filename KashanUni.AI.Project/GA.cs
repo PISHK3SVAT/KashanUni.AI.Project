@@ -8,24 +8,24 @@ namespace KashanUni.AI.Project
 {
     public class GA<T>
     {
-        private Chromosome<T>[] population;
-
-        public GA(int populationSize, int chromosomSize)
+        public (Chromosome<T> chromosome, double fitness)[] population;
+        public double[] fitness;
+        public GA(int populationSize, int chromosomSize, List<T> allel)
         {
-            population = new Chromosome<T>[populationSize];
-
+            population = new (Chromosome<T> chromosome, double fitness)[populationSize];
+            fitness = new double[populationSize];
             for (int i = 0; i < populationSize; i++)
             {
-                population[i]=new Chromosome<T> (chromosomSize);
+                population[i]=(new Chromosome<T> (chromosomSize, allel),0);
             }
         }
 
-        public Chromosome<T>[] Execute(int stopCount, double crossOverProb)
+        public (Chromosome<T> chromosome, double fitness)[] Execute(int stopCount, double crossOverProb)
         {
             InitialPopulation();
             for (int i = 1; i <= stopCount; i++)
             {
-                Evaluate();
+                EvaluateAll();
                 var parents=RandomParentSelection();
                 var childrens=UniformCrossOver(crossOverProb, parents.a, parents.b);
                 Mutation(childrens.a);
@@ -34,21 +34,52 @@ namespace KashanUni.AI.Project
             }
             return population;
         }
-        void InitialPopulation()
+        public void InitialPopulation()
         {
-
+            for (int i = 0;i < population.Length; i++)
+            {
+                var chromose = population[i].chromosome;
+                for(int j = 0; j < chromose.Values.Length; j++)
+                {
+                    var rnd = new Random();
+                    var index = rnd.Next(0, chromose.allel.Count);
+                    chromose[j] = chromose.allel[index];
+                }
+            }
         }
-        void Evaluate()
+        void Evaluate(Chromosome<T> chromosome)
         {
-
+            
+        }
+        void EvaluateAll()
+        {
+            
         }
         (Chromosome<T> a, Chromosome<T> b) RandomParentSelection()
         {
-            return (population[0], population[1]);
+            return (population[0].chromosome, population[1].chromosome);
         }
         (Chromosome<T> a, Chromosome<T> b) UniformCrossOver(double pc,Chromosome<T> a, Chromosome<T> b)
         {
-            return (population[0], population[1]);
+            var n = a.Values.Length;
+            var child1 = new Chromosome<T>(n,a.allel);
+            var child2 = new Chromosome<T>(n, a.allel);
+            for(int i = 0; i < a.Values.Length; i++)
+            {
+                var rnd = new Random();
+                var value = rnd.NextDouble();
+                if (value < pc)
+                {
+                    child1[i] = b[i];
+                    child2[i] = a[i];
+                }
+                else
+                {
+                    child1[i] = a[i];
+                    child2[i] = b[i];
+                }
+            }
+            return (child1, child2);
         }
         void Mutation(Chromosome<T> child)
         {
@@ -56,29 +87,15 @@ namespace KashanUni.AI.Project
         }
         void RoulteteWheel()
         {
+            var probs = new double[population.Length];
+            var total = fitness.Sum();
+            for (int i = 0; i < probs.Length; i++)
+                probs[i] = fitness[i] / total;
 
         }
         void ChangePopulation(Chromosome<T> child1, Chromosome<T> child2)
         {
 
-        }
-    }
-
-    public class Chromosome<T>(int n)
-    {
-        private readonly int n=n;
-        private T[] chromosomes=new T[n];
-
-        public T[] Chromosomes 
-        { 
-            get => chromosomes;
-            set
-            {
-                if (value.Length != n)
-                    throw new ArgumentOutOfRangeException();
-                for (int i = 0; i < n; i++)
-                    chromosomes[i] = value[i];
-            }
         }
     }
 }
