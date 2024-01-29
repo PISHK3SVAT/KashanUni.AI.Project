@@ -56,8 +56,27 @@ List<int> allel = new();
 
 
 Console.WriteLine("Hello, World!");
-
-var ga = new GA<int>(4, choromosomeLenght, allel);
+double Evaluate(Chromosome<int> a)
+{
+    var tmp = 0D;
+    for (int i = 0; i < a.Values.Length; i++)
+    {
+        var rowNum = a[i];
+        var max = 0;
+        for (int j = 0; j < matrix!.GetLength(1); j++)
+        {
+            var val = matrix[rowNum, j];
+            if (val!=0 && val != int.MaxValue)
+            {
+                if (val>max)
+                    max = val;
+            }
+        }
+        tmp += max;
+    }
+    return tmp;
+}
+var ga = new GA<int>(4, choromosomeLenght, allel, Evaluate);
 ga.InitialPopulation();
 foreach (var item in ga.population)
 {
